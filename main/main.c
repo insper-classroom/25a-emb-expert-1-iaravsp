@@ -34,11 +34,6 @@
 #error Need to define MQTT_SERVER
 #endif
 
-// This file includes your client certificate for client server authentication
-#ifdef MQTT_CERT_INC
-#include MQTT_CERT_INC
-#endif
-
 #ifndef MQTT_TOPIC_LEN
 #define MQTT_TOPIC_LEN 100
 #endif
