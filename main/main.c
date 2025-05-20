@@ -116,14 +116,14 @@ static float read_onboard_temperature(const char unit)
     float adc = (float)adc_read() * conversionFactor;
     float tempC = 27.0f - (adc - 0.706f) / 0.001721f;
 
-    if (unit == 'C' || unit != 'F')
+    if (unit != 'F')
     {
         return tempC;
     }
-    else if (unit == 'F')
-    {
-        return tempC * 9 / 5 + 32;
-    }
+    // else if (unit == 'F')
+    // {
+    //     return tempC * 9 / 5 + 32;
+    // }
 
     return -1.0f;
 }
