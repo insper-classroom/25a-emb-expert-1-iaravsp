@@ -21,7 +21,7 @@
 
 #define WIFI_SSID "Embarcados"
 #define WIFI_PASSWORD "Embassados"
-#define MQTT_SERVER "192.168.0.101"
+#define MQTT_SERVER "192.168.0.105"
 
 // #define MQTT_SERVER "broker.hivemq.com"
 
@@ -97,7 +97,7 @@ typedef struct
 #endif
 
 const int LDR_PIN = 28;
-const int LED_PIN = 16;
+const int LED_PIN = 21;
 
 /* References for this implementation:
  * raspberry-pi-pico-c-sdk.pdf, Section '4.1.1. hardware_adc'
@@ -127,7 +127,8 @@ static float read_ldr()
     /* 12-bit conversion, assume max value == ADC_VREF == 3.3 V */
     const float conversionFactor = 3.3f / (1 << 12);
     float adc = (float)adc_read() * conversionFactor;
-    return adc;
+    int resist = 10000 * (3.3f - adc) / adc;
+    return resist;
 }
 
 static void pub_request_cb(__unused void *arg, err_t err)
@@ -201,7 +202,7 @@ static void publish_ldr(MQTT_CLIENT_DATA_T *state)
         old_ldr_value = ldr_value;
         // Publish ldr on /temperature topic
         char ldr_str[16];
-        snprintf(ldr_str, sizeof(ldr_str), "%.2f", ldr_value);
+        snprintf(ldr_str, sizeof(ldr_str), "%.2f ohms", ldr_value);
         INFO_printf("Publishing %s to %s\n", ldr_str, ldr_key);
         mqtt_publish(state->mqtt_client_inst, ldr_key, ldr_str, strlen(ldr_str), MQTT_PUBLISH_QOS, MQTT_PUBLISH_RETAIN, pub_request_cb, state);
     }
